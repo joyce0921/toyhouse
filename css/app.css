@@ -472,9 +472,11 @@ textarea.input { resize: vertical; }
 .modal-foot .btn { flex: 1; }
 
 /* ---------- 首次引导 ---------- */
-/* onboarding-root 刻意保留默认 pointer-events（其覆盖层内按钮需可点）；
-   引导结束由 js 加 .hidden (display:none) 整体卸载，无需 none+auto 翻转，避免破坏引导 */
-.onboarding-root { z-index: 80; }
+/* 空引导容器不得拦截下方 #app（onboardingDone=true 时不渲染内容、无 .hidden、
+   仍常驻全屏 fixed+z80）：根容器 none，可见的 overlay 再恢复 auto，按钮照常可点
+   （与 .modal-root / .timer-root 同模式） */
+.onboarding-root { pointer-events: none; z-index: 80; }
+.onboarding-root .onboard-overlay { pointer-events: auto; }
 .onboard-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(150deg, var(--color-primary), var(--color-secondary));
