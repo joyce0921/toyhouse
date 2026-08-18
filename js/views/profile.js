@@ -179,64 +179,48 @@
         + '<input type="date" id="birth" class="input" value="' + UI.escape(f.birthDate) + '" max="' + new Date().toISOString().slice(0, 10) + '">'
         + '<div id="minterp" class="interp-box mt-16"></div>'
         + '</div>',
-    }).then(function () { /* 默认按钮不采用 */ });
-
-    const rootEl = UI.$('#modalRoot');
-    const attach = function () {
+      buttons: [
+        { label: '取消', value: 'cancel' },
+        { label: '保存档案', value: 'save', primary: true },
+      ],
+    }).then(function (val) {
+      // 仅 val==='save' 时保存；'cancel' 或 null（点 ✕ / 点遮罩）一律 no-op。
+      if (val !== 'save') return;
+      // 同步读取表单值（save resolve 后 modal 约 220ms 会移除 DOM，须先捕获）
       const box = UI.$('#modalRoot .modal-box .kid-form');
-      if (!box) return false;
-      const foot = box.closest('.modal-shade').querySelector('.modal-foot');
-      if (foot) {
-        foot.innerHTML = '<button class="btn btn-ghost" data-mclose="1">取消</button>'
-          + '<button class="btn btn-primary" data-msave="1">保存档案</button>';
-      }
-      const nick = box.querySelector('#nick');
-      const birth = box.querySelector('#birth');
+      const nick = box ? box.querySelector('#nick') : null;
+      const birth = box ? box.querySelector('#birth') : null;
+      const nickname = (nick && nick.value.trim()) || '小年';
+      const birthDate = birth && birth.value
+        ? new Date(birth.value + 'T00:00:00').toISOString() : null;
+      const profile = { nickname: nickname, gender: f.gender, birthDate: birthDate, updatedAt: new Date().toISOString() };
+      Store.saveBaby(profile);
+      UI.toast('档案已保存');
+      A().loadData().then(function () { A().notifyChange(); render(); });
+    });
+
+    // 非-foot 交互：gender 激活态切换 + 出生日期实时"当前月龄"
+    // modal() 同步向 #modalRoot 注入 .kid-form，此处可直接绑定监听。
+    const box = UI.$('#modalRoot .modal-box .kid-form');
+    if (box) {
       function updateInterp() {
         const ip = box.querySelector('#minterp');
-        if (birth.value) {
+        const birth = box.querySelector('#birth');
+        if (ip && birth && birth.value) {
           const age = RULES.computeAge(birth.value, new Date());
           ip.innerHTML = '当前月龄：<b>' + UI.escape(age.label) + '</b>（满月实时计算，跨天自动更新）';
-        } else {
+        } else if (ip) {
           ip.innerHTML = '填写出生日期后自动计算月龄';
         }
       }
-      birth.addEventListener('input', updateInterp);
-      updateInterp();
+      const birth = box.querySelector('#birth');
+      if (birth) { birth.addEventListener('input', updateInterp); updateInterp(); }
       box.querySelectorAll('.gender-opt').forEach(function (b) {
         b.addEventListener('click', function () {
           f.gender = b.getAttribute('data-gender');
           box.querySelectorAll('.gender-opt').forEach(function (x) { x.classList.toggle('active', x === b); });
         });
       });
-      if (foot) {
-        foot.addEventListener('click', function (e) {
-          if (e.target.closest('[data-mclose]')) { closeModal(box); return; }
-          if (e.target.closest('[data-msave]')) {
-            f.nickname = nick.value.trim() || '小年';
-            if (birth.value) f.birthDate = new Date(birth.value + 'T00:00:00').toISOString();
-            else f.birthDate = null;
-            const profile = { nickname: f.nickname, gender: f.gender, birthDate: f.birthDate, updatedAt: new Date().toISOString() };
-            Store.saveBaby(profile);
-            UI.toast('档案已保存');
-            closeModal(box);
-            A().loadData().then(function () { A().notifyChange(); render(); });
-          }
-        });
-      }
-      return true;
-    };
-    if (!attach()) {
-      const obs = new MutationObserver(function () { if (attach()) obs.disconnect(); });
-      obs.observe(rootEl, { childList: true, subtree: true });
-    }
-  }
-
-  function closeModal(box) {
-    const shade = box.closest('.modal-shade');
-    if (shade) {
-      shade.classList.remove('show');
-      setTimeout(function () { if (shade.parentNode) shade.parentNode.removeChild(shade); }, 220);
     }
   }
 
