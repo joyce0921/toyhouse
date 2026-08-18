@@ -164,7 +164,7 @@
       gender: baby ? (baby.gender || '') : '',
       birthDate: baby && baby.birthDate ? baby.birthDate.slice(0, 10) : '',
     };
-    const genderBtns = [['', '未设置'], ['male', '👦 男宝'], ['female', '👧 女宝']].map(function (g) {
+    const genderBtns = [['male', '👦 男宝'], ['female', '👧 女宝']].map(function (g) {
       return '<button class="gender-opt' + (f.gender === g[0] ? ' active' : '') + '" data-gender="' + g[0] + '">' + g[1] + '</button>';
     }).join('');
 
