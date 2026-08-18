@@ -437,6 +437,9 @@ textarea.input { resize: vertical; }
 .modal-root, .onboarding-root, .timer-root {
   position: fixed; inset: 0; z-index: 50;
 }
+/* 空弹窗容器不得拦截下方 #app：根容器 none，可见的 shade 再恢复 auto（与 .timer-root 同模式） */
+.modal-root { pointer-events: none; }
+.modal-root .modal-shade.show { pointer-events: auto; }
 .modal-shade {
   position: absolute; inset: 0;
   background: rgba(93, 64, 55, 0.35);
@@ -469,6 +472,8 @@ textarea.input { resize: vertical; }
 .modal-foot .btn { flex: 1; }
 
 /* ---------- 首次引导 ---------- */
+/* onboarding-root 刻意保留默认 pointer-events（其覆盖层内按钮需可点）；
+   引导结束由 js 加 .hidden (display:none) 整体卸载，无需 none+auto 翻转，避免破坏引导 */
 .onboarding-root { z-index: 80; }
 .onboard-overlay {
   position: absolute; inset: 0;
