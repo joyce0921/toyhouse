@@ -105,6 +105,8 @@
     return new Promise(function (resolve) {
       const rootEl = $('#modalRoot');
       if (!rootEl) { resolve(null); return; }
+      // 打开新弹窗前，清理 rootEl 内遗留的弹窗（防重入），确保同一时间只有一个弹窗
+      $$('.modal-shade', rootEl).forEach(function (sh) { if (sh.parentNode) sh.parentNode.removeChild(sh); });
       const shade = document.createElement('div');
       shade.className = 'modal-shade';
       const box = document.createElement('div');
