@@ -1,0 +1,5 @@
+/*
+  X-Frame-Options: DENY
+
+/index.html
+  Cache-Control: no-cache
