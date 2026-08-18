@@ -201,6 +201,13 @@ FOCUS = { '0-3':3, '4-6':4, '7-9':4, '10-12':5, '13-18':6, '19-24':8, '25-30':10
 ---
 
 ## 8. 风险与取舍
+## 7.5 缺陷修复记录
+
+### BUG-FIX 2026-08-18：空弹窗容器拦截全屏点击
+- **现象（真机）**：首次引导能走完，但结束后点击底部 Tab「我的」及页面内按钮均无反应。
+- **根因**：`.modal-root` 采用 `position:fixed; inset:0; z-index:50`，且为空时未设 `pointer-events:none`，导致始终全屏拦截下方 `#app`（z-index 20/30）的所有点击；而引导容器 `.onboarding-root`（z-80）层级更高故引导内按钮可点，引导结束后 modal-root 仍拦截。计时器容器 `.timer-root` 因有 `pointer-events:none` 而无此问题。
+- **修复**：容器层模式统一——`.modal-root`（及 `.onboarding-root`）默认 `pointer-events:none`；仅当存在可见子弹层（`.modal-shade.show` / `.onboard-overlay`）时显式恢复 `pointer-events:auto`。参考 `.timer-root` 的既有模式。
+- **验收**：真机完成引导后，Tab 切换、页面按钮、弹窗打开/关闭均可用。
 - **真实 AI 识别**：本轮不做（用户确认），采用引导式；留出 type 字段便于未来扩展。
 - **系统级推送**：浏览器限制，采用页面内提醒兜底（用户确认）。
 - **图片存储体积**：压缩 + 提示导出备份；IndexedDB 清除前需用户确认。
