@@ -224,5 +224,5 @@
     }
   }
 
-  root.XNProfile = { render: render };
+  root.XNProfile = { render: render, openEditor: openProfileEditor };
 })(window);

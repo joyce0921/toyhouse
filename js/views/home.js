@@ -118,7 +118,10 @@
     el.querySelectorAll('[data-act]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         const act = btn.getAttribute('data-act');
-        if (act === 'editBaby') { app.goTab('profile'); }
+        if (act === 'editBaby') {
+          app.goTab('profile');
+          root.XNProfile.openEditor(baby);
+        }
         else if (act === 'goToys') { app.goTab('toys'); }
         else if (act === 'start') {
           const idx = Number(btn.closest('[data-reco]').getAttribute('data-reco'));
