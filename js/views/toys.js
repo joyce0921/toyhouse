@@ -218,18 +218,18 @@
     const editing = !!toy;
     const id = toy ? toy.id : UI.uid();
     const createdAt = toy ? toy.createdAt : new Date().toISOString();
+    const initialType = toy && toy.type ? toy.type : RULES.TOY_TYPES[0].key;
+    const initialAge = RULES.TOY_TYPES.find(t => t.key === initialType)?.defaultAge || [0, 36];
     const f = {
       id: id,
       name: toy ? (toy.name || '') : '',
       imageData: toy ? (toy.imageData || null) : null,
-      type: toy && toy.type
-        ? toy.type
-        : RULES.TOY_TYPES[0].key,
+      type: initialType,
       skills: toy && Array.isArray(toy.skills) && toy.skills.length
         ? toy.skills.slice()
         : (toy && toy.type ? (typeNode(toy.type).defaultSkills || []).slice() : RULES.TOY_TYPES[0].defaultSkills.slice()),
-      ageMin: (toy && typeof toy.ageMin === 'number') ? toy.ageMin : 0,
-      ageMax: (toy && typeof toy.ageMax === 'number') ? toy.ageMax : 36,
+      ageMin: (toy && typeof toy.ageMin === 'number') ? toy.ageMin : initialAge[0],
+      ageMax: (toy && typeof toy.ageMax === 'number') ? toy.ageMax : initialAge[1],
       note: toy ? (toy.note || '') : '',
       createdAt: createdAt,
     };
@@ -283,8 +283,15 @@
         const key = b.getAttribute('data-type');
         if (f.type === key) return;
         f.type = key;
-        const defs = (RULES.TOY_TYPES.find(function (t) { return t.key === key; }) || {}).defaultSkills || [];
+        const typeDef = RULES.TOY_TYPES.find(function (t) { return t.key === key; }) || {};
+        const defs = typeDef.defaultSkills || [];
         defs.forEach(function (s) { if (f.skills.indexOf(s) < 0) f.skills.push(s); });
+        // 切换类型时自动更新为新类型的默认适龄月龄
+        const newAge = typeDef.defaultAge || [0, 36];
+        f.ageMin = newAge[0];
+        f.ageMax = newAge[1];
+        if (minEl) { minEl.value = newAge[0]; box.querySelector('#minShow').textContent = newAge[0]; }
+        if (maxEl) { maxEl.value = newAge[1]; box.querySelector('#maxShow').textContent = newAge[1]; }
         rebindMarks(box, f);
       });
     });

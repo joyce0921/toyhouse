@@ -30,17 +30,17 @@
     { key: 'creativity', name: '创造力' },
   ];
 
-  /* ---------- 玩具类型 + 默认能力 + emoji ---------- */
+  /* ---------- 玩具类型 + 默认能力 + emoji + 默认适龄月龄 ---------- */
   const TOY_TYPES = [
-    { key: 'comfort',    name: '安抚/牙胶', icon: '🫶', defaultSkills: ['sensory', 'fine'] },
-    { key: 'audiovisual', name: '视听玩具', icon: '🔊', defaultSkills: ['sensory', 'cognition'] },
-    { key: 'motor',      name: '运动玩具', icon: '🏃', defaultSkills: ['gross'] },
-    { key: 'stacking',   name: '堆叠/构建', icon: '🧱', defaultSkills: ['fine', 'cognition'] },
-    { key: 'blocks',     name: '拼插积木', icon: '🧩', defaultSkills: ['fine', 'cognition', 'creativity'] },
-    { key: 'roleplay',   name: '角色扮演', icon: '🧸', defaultSkills: ['social', 'creativity', 'language'] },
-    { key: 'art',        name: '涂画手工', icon: '🎨', defaultSkills: ['fine', 'creativity'] },
-    { key: 'music',      name: '音乐乐器', icon: '🎵', defaultSkills: ['sensory', 'social', 'language'] },
-    { key: 'reading',    name: '绘本阅读', icon: '📚', defaultSkills: ['language', 'cognition'] },
+    { key: 'comfort',    name: '安抚/牙胶', icon: '🫶', defaultSkills: ['sensory', 'fine'], defaultAge: [0, 12] },
+    { key: 'audiovisual', name: '视听玩具', icon: '🔊', defaultSkills: ['sensory', 'cognition'], defaultAge: [0, 6] },
+    { key: 'motor',      name: '运动玩具', icon: '🏃', defaultSkills: ['gross'], defaultAge: [4, 36] },
+    { key: 'stacking',   name: '堆叠/构建', icon: '🧱', defaultSkills: ['fine', 'cognition'], defaultAge: [10, 36] },
+    { key: 'blocks',     name: '拼插积木', icon: '🧩', defaultSkills: ['fine', 'cognition', 'creativity'], defaultAge: [18, 36] },
+    { key: 'roleplay',   name: '角色扮演', icon: '🧸', defaultSkills: ['social', 'creativity', 'language'], defaultAge: [18, 36] },
+    { key: 'art',        name: '涂画手工', icon: '🎨', defaultSkills: ['fine', 'creativity'], defaultAge: [19, 36] },
+    { key: 'music',      name: '音乐乐器', icon: '🎵', defaultSkills: ['sensory', 'social', 'language'], defaultAge: [4, 36] },
+    { key: 'reading',    name: '绘本阅读', icon: '📚', defaultSkills: ['language', 'cognition'], defaultAge: [3, 36] },
   ];
 
   /* ---------- 专注时长基线（月龄段 -> 建议分钟） ---------- */
