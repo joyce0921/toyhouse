@@ -101,6 +101,7 @@
   padding: 11px 18px;
   font-size: var(--fs-base);
   font-weight: 600;
+  cursor: pointer;
   transition: transform .12s ease, box-shadow .12s ease, opacity .12s;
 }
 .btn:active { transform: scale(0.97); }
@@ -511,6 +512,7 @@ textarea.input { resize: vertical; }
   pointer-events: auto;
 }
 .timer-overlay.show { opacity: 1; transform: scale(1); }
+.timer-overlay button { pointer-events: auto; }
 .timer-head {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
 }
